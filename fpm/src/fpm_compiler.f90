@@ -272,17 +272,17 @@ end subroutine add_compile_flag_defaults
 
 ! WBD-DEVEL
 ! ---------------------------------------------------------------
-function get_envar(envar) result(fc_include_path)
+function get_envar(envar) result(envar_value)
     character(len=255), intent(in) :: envar
-    character(len=:), allocatable  :: fc_include_path
+    character(len=:), allocatable  :: envar_value
     integer :: length
     integer :: flag
     call get_environment_variable(envar, status=flag, length=length)
     if ((flag == 0) .and. (length > 0)) then
-        allocate(character(length)::fc_include_path)
-        call get_environment_variable(envar, fc_include_path)
+        allocate(character(length)::envar_value)
+        call get_environment_variable(envar, envar_value)
     else
-        fc_include_path = ''
+        envar_value = ''
     end if
 end function get_envar
 
