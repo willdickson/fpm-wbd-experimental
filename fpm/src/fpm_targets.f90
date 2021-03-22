@@ -345,10 +345,22 @@ subroutine resolve_module_dependencies(targets,error)
     integer :: i, j
 
     do i=1,size(targets)
+
         
         if (.not.allocated(targets(i)%ptr%source)) cycle
 
+            ! WBD-DEVEL
+            ! -------------------------------------------------------------
+            !print *, 'file_name: ', targets(i)%ptr%source%file_name
+            ! -------------------------------------------------------------
+
+
             do j=1,size(targets(i)%ptr%source%modules_used)
+
+                ! WBD-DEVEL
+                ! -------------------------------------------------------------
+                !print *, '  ', targets(i)%ptr%source%modules_used(j)%s
+                ! -------------------------------------------------------------
 
                 if (targets(i)%ptr%source%modules_used(j)%s .in. targets(i)%ptr%source%modules_provided) then
                     ! Dependency satisfied in same file, skip
@@ -365,15 +377,30 @@ subroutine resolve_module_dependencies(targets,error)
                         find_module_dependency(targets,targets(i)%ptr%source%modules_used(j)%s)
                 end if
 
+                ! WBD-DEVEL
+                ! -------------------------------------------------------------
+                ! Note sure what to do here .... 
+                ! maybe need list of .mod files in FPM_INCLUDE_PATH ??? 
+                ! or is letting it go OK?
+                ! -------------------------------------------------------------
                 if (.not.associated(dep%ptr)) then
-                    call fatal_error(error, &
-                            'Unable to find source for module dependency: "' // &
-                            targets(i)%ptr%source%modules_used(j)%s // &
-                            '" used by "'//targets(i)%ptr%source%file_name//'"')
-                    return
+                    !print *, 'unable to file module dependency'
+                else
+                    call add_dependency(targets(i)%ptr, dep%ptr)
                 end if
 
-                call add_dependency(targets(i)%ptr, dep%ptr)
+                ! original
+                !--------------------------------------------------------------
+                !if (.not.associated(dep%ptr)) then
+                !    call fatal_error(error, &
+                !            'Unable to find source for module dependency: "' // &
+                !            targets(i)%ptr%source%modules_used(j)%s // &
+                !            '" used by "'//targets(i)%ptr%source%file_name//'"')
+                !    return
+                !end if
+                !
+                !call add_dependency(targets(i)%ptr, dep%ptr)
+                ! -------------------------------------------------------------
 
             end do
 
@@ -399,7 +426,7 @@ function find_module_dependency(targets,module_name,include_dir) result(target_p
     do k=1,size(targets)
 
         if (.not.allocated(targets(k)%ptr%source)) cycle
-
+        
         do l=1,size(targets(k)%ptr%source%modules_provided)
 
             if (module_name == targets(k)%ptr%source%modules_provided(l)%s) then

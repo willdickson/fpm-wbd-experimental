@@ -62,7 +62,15 @@ character(len=*),parameter :: names(*)=[ character(len=10) :: &
 & 'crayftn', &
 & 'xlf90', &
 & 'unknown']
-integer :: i
+integer :: i 
+! WBD-DEVEL
+! ------------------------------------------------------------------------
+character(len=255), parameter :: fc_include_path_envar = "FPM_INCLUDE_PATH"
+character(len=255), parameter :: fc_library_path_envar = "LD_LIBRARY_PATH"
+character(len=:), allocatable :: fc_include_path
+character(len=:), allocatable :: fc_library_path
+! ------------------------------------------------------------------------
+
 
     modpath=join_path(model%output_directory,model%package_name)
     fflags=''
@@ -244,8 +252,41 @@ integer :: i
        write(*,'(a,*(T31,6(a:,", "),/))')'          known compilers are ',(trim(names(i)),i=1,size(names)-1)
     end select
 
+
+    ! WBD-DEVEL
+    ! ---------------------------------------------------------------
+    fc_include_path = get_envar(fc_include_path_envar)
+    if (len(fc_include_path) > 0) then
+        fflags = fflags//' -I '//fc_include_path
+    end if
+    fc_library_path = get_envar(fc_library_path_envar)
+    if (len(fc_include_path) > 0) then
+        fflags = fflags//' -L '//fc_library_path
+    end if
+    ! ---------------------------------------------------------------
+
     model%fortran_compile_flags = fflags//' '//mandatory
      
 end subroutine add_compile_flag_defaults
+
+
+! WBD-DEVEL
+! ---------------------------------------------------------------
+function get_envar(envar) result(fc_include_path)
+    character(len=255), intent(in) :: envar
+    character(len=:), allocatable  :: fc_include_path
+    integer :: length
+    integer :: flag
+    call get_environment_variable(envar, status=flag, length=length)
+    if ((flag == 0) .and. (length > 0)) then
+        allocate(character(length)::fc_include_path)
+        call get_environment_variable(envar, fc_include_path)
+    else
+        fc_include_path = ''
+    end if
+end function get_envar
+
+
+! ---------------------------------------------------------------
 
 end module fpm_compiler
