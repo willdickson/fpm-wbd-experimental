@@ -1,11 +1,14 @@
 # Fortran Package Manager (WBD's experimental version)
 
 Note, this an experimental version of the Fortran Package manager which has
-been modified so that you can set include and library path's using environment
-variables for linking with (possibly custom built) external libraries such as
-hdf5, etc. The include path is set via FPM_INCLUDE_PATH and the library path is
-set using LD_LIBRARY_PATH. If you are looking for the actual Fortran Package
-Manager (fpm) you should go [here](https://github.com/fortran-lang/fpm/issues)  
+been modified so that you can set include and library path's for the compiler
+using environment variables for linking with (possibly custom built) external
+libraries such as hdf5, etc. The include path is set via FPM_INCLUDE_PATH and
+the library path is set using FPM_LIBRARY_PATH.  Note, you may need to also 
+set LD_LIBRARY_PATH for runtime. 
+
+If you are looking for the actual Fortran Package Manager (fpm) you
+should go [here](https://github.com/fortran-lang/fpm/issues)  
 
 Fortran Package Manager (fpm) is a package manager and build system for Fortran.
 Its key goal is to improve the user experience of Fortran programmers.

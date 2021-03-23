@@ -66,7 +66,7 @@ integer :: i
 ! WBD-DEVEL
 ! ------------------------------------------------------------------------
 character(len=255), parameter :: fc_include_path_envar = "FPM_INCLUDE_PATH"
-character(len=255), parameter :: fc_library_path_envar = "LD_LIBRARY_PATH"
+character(len=255), parameter :: fc_library_path_envar = "FPM_LIBRARY_PATH"
 character(len=:), allocatable :: fc_include_path
 character(len=:), allocatable :: fc_library_path
 ! ------------------------------------------------------------------------
